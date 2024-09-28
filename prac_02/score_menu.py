@@ -15,7 +15,7 @@ def main():
         if choice == 'g':
             score = get_valid_score('Score: ')
         elif choice == 'p':
-            (print(determine_score_status(score)))
+            print(determine_score_status(score))
         elif choice == 's':
             print('*' * score)
         choice = input(MENU).lower()
