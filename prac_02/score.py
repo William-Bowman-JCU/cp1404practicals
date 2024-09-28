@@ -5,6 +5,7 @@ Broken program to determine score status
 import random
 
 def main():
+    """Get user score & random score, and show their statuses"""
     score = float(input("Enter score: "))
     print(determine_score_status(score))
     random_score = random.randint(0, 100)
@@ -12,6 +13,7 @@ def main():
     print(determine_score_status(random_score))
 
 def determine_score_status(score):
+    """Determine users score status based off of their score"""
     if score < 0 or score > 100:
         return "Invalid score"
     elif score >= 90:
