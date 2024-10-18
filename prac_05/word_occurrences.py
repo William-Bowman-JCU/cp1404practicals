@@ -6,12 +6,12 @@ Actual:   15 minutes
 
 text = input('Text: ')
 words = sorted(text.split())
-words_dict = {}
+word_to_occurrences = {}
 for word in words:
-    if word in words_dict:
-        words_dict[word] += 1
+    if word in word_to_occurrences:
+        word_to_occurrences[word] += 1
     else:
-        words_dict[word] = 1
+        word_to_occurrences[word] = 1
 
-for word in words_dict:
-    print(f'{word:10} : {words_dict[word]}')
+for word in word_to_occurrences:
+    print(f'{word:10} : {word_to_occurrences[word]}')
