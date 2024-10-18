@@ -1,3 +1,8 @@
+"""
+Word Occurrences
+Estimate: 30 minutes
+Actual:   30 minutes
+"""
 FILENAME = 'wimbledon.csv'
 
 def main():
