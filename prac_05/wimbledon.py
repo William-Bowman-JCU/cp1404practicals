@@ -32,6 +32,6 @@ def display_data(champ_to_wins, countries):
     print('Wimbledon Champions:')
     for champ in champ_to_wins:
         print(f'{champ} {champ_to_wins[champ]}')
-    print(f'\nThese 12 countries have won Wimbledon:\n{', '.join(sorted(countries))}')
+    print(f'\nThese {len(countries)} countries have won Wimbledon:\n{', '.join(sorted(countries))}')
 
 main()
