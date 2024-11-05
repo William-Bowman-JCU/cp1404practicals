@@ -8,6 +8,7 @@ def main():
             data = line.strip().split(',')
             guitar = Guitar(data[0], int(data[1]), float(data[2]))
             guitars.append(guitar)
+    guitars.sort()
     for guitar in guitars:
         print(guitar)
 main()
