@@ -39,6 +39,13 @@ def main():
                     print(project)
             except:
                 print('No projects found')
+        elif choice == 'f':
+            date = input('Date: ')
+            date = datetime.strptime(date, '%d/%m/%Y')
+            # Sort this by date instead of priority
+            future_projects = sorted([project for project in projects if project.start_date > date])
+            for project in future_projects:
+                print(project)
         choice = get_choice()
 
 
