@@ -6,10 +6,10 @@ class Project:
         self.start_date = start_date
         self.priority = int(priority)
         self.cost_estimate = float(cost_estimate)
-        self.completion_percentage = float(completion_percentage)
+        self.completion_percentage = int(completion_percentage)
     
     def __repr__(self):
-        return f'{self.name:20}, {self.start_date.strftime('%d/%m/%Y')}, {self.priority}, ${self.cost_estimate:<12,.2f}, {self.completion_percentage:6.2f}%'
+        return f'{self.name:20}, start: {self.start_date.strftime('%d/%m/%Y')}, priority {self.priority}, estimate: ${self.cost_estimate:<12,.2f}, completion: {self.completion_percentage:6}%'
     
-    # def __lt__(self, other):
-    #     return self.priority < other.priority
+    def __lt__(self, other):
+        return self.priority < other.priority
