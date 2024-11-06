@@ -47,8 +47,14 @@ def main():
         elif choice == 'u':
             for i, project in enumerate(projects):
                 print(f'{i} {project}')
-            project_choice = get_valid_number('Project choice: ')
-
+            project_choice = projects[get_updated_value('Project choice: ')]
+            print(project_choice)
+            new_percentage = get_updated_value('New Percentage: ')
+            new_priority = get_updated_value('New Priority: ')
+            if new_percentage != '':
+                project_choice.completion_percentage = new_percentage
+            if new_priority != '':
+                project_choice.priority = new_priority
         choice = get_choice()
 
 def load_projects():
@@ -80,7 +86,7 @@ def convert_string_to_date(date):
 def get_valid_number(prompt):
     """Get a number"""
     value = input(prompt)
-    while type(value) is str:
+    while isinstance(value, str):
         try:
             value = int(value)
         except ValueError:
@@ -88,4 +94,16 @@ def get_valid_number(prompt):
             value = input(prompt)
     return value
 
+def get_updated_value(prompt):
+    """"""
+    value = input(prompt)
+    while isinstance(value, str):
+        try:
+            value = int(value)
+        except ValueError:
+            if value == '':
+                return value
+            print('Invalid input; enter a valid number')
+            value = input(prompt)
+    return value
 main()
