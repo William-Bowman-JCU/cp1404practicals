@@ -7,4 +7,7 @@ class Project:
         self.completion_percentage = completion_percentage
     
     def __repr__(self):
-        return f'{self.name}, {self.starting_date}, {self.priority}, {self.cost_estimate}, {self.completion_percentage}'
+        return f'{self.name:20}, {self.starting_date}, {self.priority}, ${self.cost_estimate:<10,}, {self.completion_percentage:6.2f}%'
+    
+    def __lt__(self, other):
+        return self.priority < other.priority

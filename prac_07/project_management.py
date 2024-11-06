@@ -7,7 +7,8 @@ def main():
     while choice != 'q':
         if choice == 'l':
             projects = []
-            in_filename = input('Filename: ')
+            # in_filename = input('Filename: ')
+            in_filename = 'projects.txt'
             try:
                 with open(f'prac_07/{in_filename}', 'r') as in_file:
                     in_file.readline()
@@ -16,6 +17,7 @@ def main():
                         # Use datetime here
                         project = Project(data[0], data[1], int(data[2]), float(data[3]), float(data[4]))
                         projects.append(project)
+                print(f'{in_filename} loaded successfully')
             except:
                 print('Invalid filename')
         elif choice == 's':
@@ -27,7 +29,13 @@ def main():
                 print('Invalid filename')
         elif choice == 'd':
             try:
-                for project in projects:
+                incomplete_projects = sorted([project for project in projects if project.completion_percentage != 100])
+                completed_projects = sorted([project for project in projects if project.completion_percentage == 100])
+                print('Incomplete projects:')
+                for project in incomplete_projects:
+                    print(project)
+                print('\nCompleted projects:')
+                for project in completed_projects:
                     print(project)
             except:
                 print('No projects found')
