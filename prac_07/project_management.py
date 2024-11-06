@@ -17,7 +17,7 @@ def main():
                     for line in in_file:
                         data = line.strip().split('\t')
                         # Use datetime here
-                        project = Project(data[0], data[1], int(data[2]), float(data[3]), float(data[4]))
+                        project = Project(data[0], convert_string_to_date(data[1]), data[2], data[3], data[4])
                         projects.append(project)
                 print(f'{in_filename} loaded successfully')
             except:
@@ -42,11 +42,19 @@ def main():
             except:
                 print('No projects found')
         elif choice == 'f':
-            date = input('Date: ')
-            date = datetime.strptime(date, '%d/%m/%Y')
+            date = convert_string_to_date(input('Date: '))
             future_projects = sorted([project for project in projects if project.start_date > date], key=attrgetter('start_date'))
             for project in future_projects:
                 print(project)
+        elif choice == 'a':
+            print('Enter project details:')
+            name = input('Name: ')
+            start_date = convert_string_to_date(input('Start date: '))
+            priority = int(input('Priority: '))
+            cost_estimate = float(input('Cost estimate: $'))
+            completion_percentage = float(input('Completetion percentage: '))
+            print(f'{name} has been added')
+            projects.append(Project(name, start_date, priority, cost_estimate, completion_percentage))
         choice = get_choice()
 
 
@@ -56,5 +64,8 @@ def get_choice():
         print('Invalid choice')
         choice = input(MENU).lower()
     return choice
+
+def convert_string_to_date(date):
+    return datetime.strptime(date, '%d/%m/%Y')
 
 main()
