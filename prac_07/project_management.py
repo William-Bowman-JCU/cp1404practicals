@@ -1,5 +1,7 @@
 from project import Project
 from datetime import datetime
+from operator import attrgetter
+
 MENU = '\nMenu:\n(L)oad projects\n(S)ave projects\n(D)isplay projects\n(F)ilter projects by date\n(A)dd new project\n(U)pdate project\n(Q)uit\n>> '
 
 def main():
@@ -29,8 +31,8 @@ def main():
                 print('Invalid filename')
         elif choice == 'd':
             try:
-                incomplete_projects = sorted([project for project in projects if project.completion_percentage != 100])
-                completed_projects = sorted([project for project in projects if project.completion_percentage == 100])
+                incomplete_projects = sorted([project for project in projects if project.completion_percentage != 100], key=attrgetter('priority'))
+                completed_projects = sorted([project for project in projects if project.completion_percentage == 100], key=attrgetter('priority'))
                 print('Incomplete projects:')
                 for project in incomplete_projects:
                     print(project)
@@ -42,8 +44,7 @@ def main():
         elif choice == 'f':
             date = input('Date: ')
             date = datetime.strptime(date, '%d/%m/%Y')
-            # Sort this by date instead of priority
-            future_projects = sorted([project for project in projects if project.start_date > date])
+            future_projects = sorted([project for project in projects if project.start_date > date], key=attrgetter('start_date'))
             for project in future_projects:
                 print(project)
         choice = get_choice()

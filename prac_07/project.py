@@ -11,5 +11,5 @@ class Project:
     def __repr__(self):
         return f'{self.name:20}, {self.start_date}, {self.priority}, ${self.cost_estimate:<10,}, {self.completion_percentage:6.2f}%'
     
-    def __lt__(self, other):
-        return self.priority < other.priority
+    # def __lt__(self, other):
+    #     return self.priority < other.priority
