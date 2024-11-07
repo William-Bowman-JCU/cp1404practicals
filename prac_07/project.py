@@ -13,3 +13,6 @@ class Project:
     
     def __lt__(self, other):
         return self.priority < other.priority
+    
+    def save_format(self):
+        return '\t'.join([self.name, self.start_date.strftime('%d/%m/%Y'), str(self.priority), str(self.cost_estimate), str(self.completion_percentage)])

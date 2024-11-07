@@ -6,17 +6,19 @@ MENU = '\nMenu:\n(L)oad projects\n(S)ave projects\n(D)isplay projects\n(F)ilter 
 
 def main():
     print('Welcome to the Pythonic Project Management')
-    projects = load_projects()
+    projects, header = load_projects()
     choice = get_choice()
     while choice != 'q':
         if choice == 'l':
-            projects = load_projects()
+            projects, header = load_projects()
         elif choice == 's':
             try:
                 out_filename = input('Filename: ')
                 with open(f'prac_07/{out_filename}', 'w') as out_file:
-                    pass
-            except:
+                    print(header, file=out_file)
+                    for project in projects:
+                        print(project.save_format(), file=out_file)
+            except FileNotFoundError:
                 print('Invalid filename')
         elif choice == 'd':
             try:
@@ -47,7 +49,11 @@ def main():
         elif choice == 'u':
             for i, project in enumerate(projects):
                 print(f'{i} {project}')
-            project_choice = projects[get_updated_value('Project choice: ')]
+            project_index = get_valid_number('Project choice: ')
+            while project_index > len(projects):
+                print('Invalid index')
+                project_index = get_valid_number('Project choice: ')
+            project_choice = projects[project_index]
             print(project_choice)
             new_percentage = get_updated_value('New Percentage: ')
             new_priority = get_updated_value('New Priority: ')
@@ -56,6 +62,8 @@ def main():
             if new_priority != '':
                 project_choice.priority = new_priority
         choice = get_choice()
+    print('Would you like to save to projects.txt? no, I think not.')
+    print('Thank you for using custom-built project management software.')
 
 def load_projects():
     projects = []
@@ -63,7 +71,7 @@ def load_projects():
     in_filename = 'projects.txt'
     try:
         with open(f'prac_07/{in_filename}', 'r') as in_file:
-            in_file.readline()
+            header = in_file.readline().strip()
             for line in in_file:
                 data = line.strip().split('\t')
                 project = Project(data[0], convert_string_to_date(data[1]), data[2], data[3], data[4])
@@ -71,7 +79,7 @@ def load_projects():
         print(f'Loaded {len(projects)} projects from {in_filename}')
     except FileNotFoundError:
         print('Invalid filename')
-    return projects
+    return (projects, header)
 
 def get_choice():
     choice = input(MENU).lower()
