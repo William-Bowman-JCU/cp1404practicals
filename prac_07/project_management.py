@@ -33,17 +33,20 @@ def main():
             except:
                 print('No projects found')
         elif choice == 'f':
-            date = convert_string_to_date(input('Show projects that start after date (dd/mm/yyyy): '))
+            date = get_valid_date('Show projects that start after date (dd/mm/yyyy): ')
             future_projects = sorted([project for project in projects if project.start_date >= date], key=attrgetter('start_date'))
             for project in future_projects:
                 print(project)
         elif choice == 'a':
             print('Enter project details:')
             name = input('Name: ')
-            start_date = convert_string_to_date(input('Start date (dd/mm/yyyy): '))
-            priority = int(input('Priority: '))
-            cost_estimate = float(input('Cost estimate: $'))
-            completion_percentage = float(input('Percent complete: '))
+            while name == '':
+                print('Invalid name')
+                name = input('Name: ')
+            start_date = get_valid_date('Start date (dd/mm/yyyy): ')
+            priority = get_valid_number('Priority: ')
+            cost_estimate = float(get_valid_number('Cost estimate: $'))
+            completion_percentage = get_valid_number('Percent complete: ')
             projects.append(Project(name, start_date, priority, cost_estimate, completion_percentage))
             print(f'{name} has been added')
         elif choice == 'u':
@@ -91,16 +94,27 @@ def get_choice():
 def convert_string_to_date(date):
     return datetime.strptime(date, '%d/%m/%Y')
 
+def get_valid_date(prompt):
+    date = input(prompt)
+    while not isinstance(date, datetime):
+        try:
+            date = datetime.strptime(date, '%d/%m/%Y')
+        except:
+            print('Invalid date')
+            date = input(prompt)
+    return date
+
 def get_valid_number(prompt):
     """Get a number"""
     value = input(prompt)
     while isinstance(value, str):
         try:
             value = int(value)
+            if value >= 0:
+                return value
         except ValueError:
             print('Invalid input; enter a valid number')
             value = input(prompt)
-    return value
 
 def get_updated_value(prompt):
     """"""
