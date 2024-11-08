@@ -3,17 +3,19 @@ from datetime import datetime
 from operator import attrgetter
 
 MENU = '\nMenu:\n(L)oad projects\n(S)ave projects\n(D)isplay projects\n(F)ilter projects by date\n(A)dd new project\n(U)pdate project\n(Q)uit\n>> '
-
+INITIAL_FILENAME = 'projects.txt'
 def main():
+    """Load user defined projects & execute functions to modify them"""
     print('Welcome to the Pythonic Project Management')
-    projects, header = load_projects()
+    projects, header = load_projects(INITIAL_FILENAME)
     choice = get_choice()
     while choice != 'q':
         if choice == 'l':
-            projects, header = load_projects()
+            in_filename = get_valid_name('Filename: ')
+            projects, header = load_projects(in_filename)
         elif choice == 's':
             try:
-                out_filename = input('Filename: ')
+                out_filename = get_valid_name('Filename: ')
                 with open(f'prac_07/{out_filename}', 'w') as out_file:
                     print(header, file=out_file)
                     for project in projects:
@@ -39,10 +41,7 @@ def main():
                 print(project)
         elif choice == 'a':
             print('Enter project details:')
-            name = input('Name: ')
-            while name == '':
-                print('Invalid name')
-                name = input('Name: ')
+            name = get_valid_name('Name: ')
             start_date = get_valid_date('Start date (dd/mm/yyyy): ')
             priority = get_valid_number('Priority: ')
             cost_estimate = float(get_valid_number('Cost estimate: $'))
@@ -68,16 +67,23 @@ def main():
     print('Would you like to save to projects.txt? no, I think not.')
     print('Thank you for using custom-built project management software.')
 
-def load_projects():
+def get_valid_name(prompt):
+    """Get a non-blank string"""
+    name = input(prompt)
+    while name == '':
+        print('Invalid name')
+        name = input(prompt)
+    return name
+
+def load_projects(in_filename):
+    """Load all projects from the file with the given name"""
     projects = []
-    # in_filename = input('Filename: ')
-    in_filename = 'projects.txt'
     try:
         with open(f'prac_07/{in_filename}', 'r') as in_file:
             header = in_file.readline().strip()
             for line in in_file:
                 data = line.strip().split('\t')
-                project = Project(data[0], convert_string_to_date(data[1]), data[2], data[3], data[4])
+                project = Project(data[0], datetime.strptime(data[1], '%d/%m/%Y'), data[2], data[3], data[4])
                 projects.append(project)
         print(f'Loaded {len(projects)} projects from {in_filename}')
     except FileNotFoundError:
@@ -85,16 +91,15 @@ def load_projects():
     return (projects, header)
 
 def get_choice():
+    """Get a valid menu choice"""
     choice = input(MENU).lower()
     while choice not in ['l', 's', 'd', 'f', 'a', 'u', 'q']:
         print('Invalid choice')
         choice = input(MENU).lower()
     return choice
 
-def convert_string_to_date(date):
-    return datetime.strptime(date, '%d/%m/%Y')
-
 def get_valid_date(prompt):
+    """Get a valid date string, in the dd/mm/yy or /yyyy format"""
     date = input(prompt)
     while not isinstance(date, datetime):
         try:
@@ -105,7 +110,7 @@ def get_valid_date(prompt):
     return date
 
 def get_valid_number(prompt):
-    """Get a number"""
+    """Get a number >= 0"""
     value = input(prompt)
     while isinstance(value, str):
         try:
@@ -117,15 +122,16 @@ def get_valid_number(prompt):
             value = input(prompt)
 
 def get_updated_value(prompt):
-    """"""
+    """Get a non negative number, or a blank string"""
     value = input(prompt)
     while isinstance(value, str):
         try:
             value = int(value)
+            if value >= 0:
+                return value
         except ValueError:
             if value == '':
                 return value
             print('Invalid input; enter a valid number')
             value = input(prompt)
-    return value
 main()
