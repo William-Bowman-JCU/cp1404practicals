@@ -4,6 +4,7 @@ from operator import attrgetter
 
 MENU = '\nMenu:\n(L)oad projects\n(S)ave projects\n(D)isplay projects\n(F)ilter projects by date\n(A)dd new project\n(U)pdate project\n(Q)uit\n>> '
 INITIAL_FILENAME = 'projects.txt'
+
 def main():
     """Load user defined projects & execute functions to modify them"""
     print('Welcome to the Pythonic Project Management')
@@ -11,17 +12,10 @@ def main():
     choice = get_choice()
     while choice != 'q':
         if choice == 'l':
-            in_filename = get_valid_name('Filename: ')
+            in_filename = get_valid_string('Filename: ')
             projects, header = load_projects(in_filename)
         elif choice == 's':
-            try:
-                out_filename = get_valid_name('Filename: ')
-                with open(f'prac_07/{out_filename}', 'w') as out_file:
-                    print(header, file=out_file)
-                    for project in projects:
-                        print(project.save_format(), file=out_file)
-            except FileNotFoundError:
-                print('Invalid filename')
+            save_projects(projects, header)
         elif choice == 'd':
             try:
                 incomplete_projects = sorted([project for project in projects if project.completion_percentage != 100])
@@ -41,7 +35,7 @@ def main():
                 print(project)
         elif choice == 'a':
             print('Enter project details:')
-            name = get_valid_name('Name: ')
+            name = get_valid_string('Name: ')
             start_date = get_valid_date('Start date (dd/mm/yyyy): ')
             priority = get_valid_number('Priority: ')
             cost_estimate = float(get_valid_number('Cost estimate: $'))
@@ -52,28 +46,38 @@ def main():
             for i, project in enumerate(projects):
                 print(f'{i} {project}')
             project_index = get_valid_number('Project choice: ')
-            while project_index > len(projects):
+            while project_index > len(projects) - 1:
                 print('Invalid index')
                 project_index = get_valid_number('Project choice: ')
             project_choice = projects[project_index]
             print(project_choice)
-            new_percentage = get_updated_value('New Percentage: ')
-            new_priority = get_updated_value('New Priority: ')
+            new_percentage = get_valid_number('New Percentage: ', blank=True)
+            new_priority = get_valid_number('New Priority: ', blank=True)
             if new_percentage != '':
                 project_choice.completion_percentage = new_percentage
             if new_priority != '':
                 project_choice.priority = new_priority
         choice = get_choice()
-    print('Would you like to save to projects.txt? no, I think not.')
+    is_final_save = get_valid_string('Would you like to save to projects.txt?\n>> ')
+    if is_final_save == 'yes':
+        save_projects(projects, header)
     print('Thank you for using custom-built project management software.')
 
-def get_valid_name(prompt):
+
+def save_projects(projects, header):
+    out_filename = get_valid_string('Filename: ')
+    with open(f'prac_07/{out_filename}', 'w') as out_file:
+        print(header, file=out_file)
+        for project in projects:
+            print(project.save_format(), file=out_file)
+
+def get_valid_string(prompt):
     """Get a non-blank string"""
-    name = input(prompt)
-    while name == '':
-        print('Invalid name')
-        name = input(prompt)
-    return name
+    value = input(prompt)
+    while value == '':
+        print('Invalid input')
+        value = input(prompt)
+    return value
 
 def load_projects(in_filename):
     """Load all projects from the file with the given name"""
@@ -93,7 +97,7 @@ def load_projects(in_filename):
 def get_choice():
     """Get a valid menu choice"""
     choice = input(MENU).lower()
-    while choice not in ['l', 's', 'd', 'f', 'a', 'u', 'q']:
+    while choice not in ('l', 's', 'd', 'f', 'a', 'u', 'q'):
         print('Invalid choice')
         choice = input(MENU).lower()
     return choice
@@ -109,29 +113,20 @@ def get_valid_date(prompt):
             date = input(prompt)
     return date
 
-def get_valid_number(prompt):
-    """Get a number >= 0"""
+def get_valid_number(prompt, blank=False):
+    """Get a non negative number, and optionally a blank string"""
     value = input(prompt)
     while isinstance(value, str):
         try:
-            value = int(value)
-            if value >= 0:
+            if int(value) >= 0:
+                return int(value)
+            else:
+                print('Invalid input; enter a valid number')
+                value = input(prompt)
+        except:
+            if blank and value == '':
                 return value
-        except ValueError:
             print('Invalid input; enter a valid number')
             value = input(prompt)
 
-def get_updated_value(prompt):
-    """Get a non negative number, or a blank string"""
-    value = input(prompt)
-    while isinstance(value, str):
-        try:
-            value = int(value)
-            if value >= 0:
-                return value
-        except ValueError:
-            if value == '':
-                return value
-            print('Invalid input; enter a valid number')
-            value = input(prompt)
 main()
