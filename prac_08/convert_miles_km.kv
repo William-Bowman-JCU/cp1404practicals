@@ -1,1 +1,23 @@
-#:kivy !
+#:kivy 1.0
+BoxLayout:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        TextInput:
+            id: miles_input
+            on_text: app.convert_miles_km()
+        BoxLayout:
+            orientation: 'vertical'
+            Button:
+                text: 'Up'
+                on_press: app.handle_increment(1)
+            Button:
+                text: 'Down'
+                on_press: app.handle_increment(-1)
+    # Button:
+    #     text: 'Convert miles to km'
+    #     on_press: app.convert_miles_km()
+    Label:
+        id: result
+        color: (1, 1, 0, 1)
+        text: app.result
