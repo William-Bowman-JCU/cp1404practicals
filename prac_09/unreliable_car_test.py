@@ -1,7 +1,7 @@
 from unreliable_car import UnreliableCar
 
-car = UnreliableCar('WRX', 100, 2.54)
+car = UnreliableCar('WRX', 100, 79.54)
 
-for i in range(100):
-    car.drive(15)
+for i in range(20):
+    car.drive(5)
     print(car)

@@ -9,9 +9,7 @@ class UnreliableCar(Car):
         name: string, name of the car
         fuel: float, one unit of fuel drives one kilometre
         """
-        self.name = name
-        self.fuel = fuel
-        self._odometer = 0
+        super().__init__(name, fuel)
         self.reliability = reliability
 
     def drive(self, distance):
